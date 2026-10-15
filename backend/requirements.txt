@@ -1,0 +1,16 @@
+fastapi==0.143.0
+uvicorn==0.54.0
+sqlalchemy==2.1.4
+alembic==1.20.0
+pydantic==2.14.0
+httpx==0.28.1
+python-multipart==0.0.32
+Pillow==12.3.0
+numpy==2.5.4
+opencv-python-headless==5.0.0.93
+argon2-cffi==25.1.0
+PyJWT==2.15.1
+email-validator==2.3.0
+psycopg[binary]==3.3.6
+redis==7.4.1
+PyYAML==6.0.3
