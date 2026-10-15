@@ -1,0 +1,32 @@
+# Local secrets. Never commit .env. .env.example files ARE committed.
+.env
+.env.*
+!.env.example
+
+# Local databases (dev SQLite files, backups, pg_dump output).
+*.db
+*.db.bak
+scamshield-backup.sql
+
+# Dependency and build output.
+.venv/
+node_modules/
+.next/
+out/
+build/
+
+# Caches and test output.
+__pycache__/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+coverage/
+
+# Logs.
+*.log
+logs/
+
+# OS files.
+.DS_Store
+Thumbs.db
