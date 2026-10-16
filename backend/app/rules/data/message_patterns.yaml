@@ -1,0 +1,112 @@
+# Editable word lists for the message scam analyzer. Edit freely.
+# Grouped by rule code. Each phrase group has "english" and "hinglish"
+# lists (Hinglish phrases are written in English letters).
+# The analyzer matches them with word-boundary search on lowercased text,
+# so "won" does not match "know" and "pin" does not match "spin".
+# Keep every entry a plain word or phrase. Do not add regex syntax.
+# See docs/contributing-rules.md. Never name a real person here.
+patterns:
+  URGENCY_LANGUAGE:
+    english:
+      - urgent
+      - urgently
+      - immediately
+      - today only
+      - within 24 hours
+      - last chance
+      - hurry
+    hinglish:
+      - turant
+      - abhi
+      - jaldi
+      - aaj hi
+      - aaj last date
+      - 24 ghante
+  ACCOUNT_THREAT:
+    english:
+      - account blocked
+      - account suspended
+      - account closed
+      - account will be blocked
+      - account has been blocked
+      - account is blocked
+      - kyc pending
+      - kyc expired
+      - kyc blocked
+      - kyc update
+    hinglish:
+      - khata band
+      - khata blocked
+      - block ho jayega
+  REWARD_BAIT:
+    english:
+      - won
+      - winner
+      - lottery
+      - prize
+      - cashback
+      - reward
+      - free gift
+      - lucky draw
+      - congratulations you have won
+    hinglish:
+      - inaam
+      - inaam jeeta
+      - muft uphar
+  ASKS_FOR_SECRET:
+    secret_words:
+      english:
+        - otp
+        - pin
+        - cvv
+        - password
+      hinglish: []
+    request_verbs:
+      english:
+        - share
+        - send
+        - tell
+        - give
+        - provide
+        - enter
+      hinglish:
+        - batao
+        - bhej
+        - bhejo
+    negations:
+      english:
+        - do not
+        - don't
+        - dont
+        - never
+      hinglish:
+        - kabhi na
+        - kabhi mat
+        - mat
+  ASKS_TO_INSTALL_APP:
+    remote_apps:
+      - anydesk
+      - teamviewer
+      - quicksupport
+  AUTHORITY_IMPERSONATION:
+    english:
+      - police
+      - cbi
+      - customs
+      - rbi
+      - digital arrest
+      - bank manager
+      - income tax department
+    hinglish: []
+  SHORT_LINK:
+    domains:
+      - bit.ly
+      - tinyurl.com
+      - t.co
+      - goo.gl
+      - is.gd
+      - ow.ly
+      - buff.ly
+      - rb.gy
+      - cutt.ly
+      - tiny.cc

@@ -1,0 +1,29 @@
+# Known UPI handles (the part after @). Edit freely.
+# Keep entries lowercase, letters only. See docs/contributing-rules.md.
+known_upi_handles:
+  - okaxis
+  - oksbi
+  - okhdfcbank
+  - okicici
+  - ybl
+  - ibl
+  - axl
+  - paytm
+  - apl
+  - upi
+  - sbi
+  - hdfcbank
+  - icici
+  - axisbank
+  - kotak
+  - pnb
+  - boi
+  - cnrb
+  - unionbank
+  - idfcbank
+  - indus
+  - fbl
+  - yesbank
+  - rbl
+  - airtel
+  - jio

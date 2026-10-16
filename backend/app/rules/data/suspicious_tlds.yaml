@@ -1,0 +1,15 @@
+# Suspicious top-level domains. Edit freely.
+# Every entry must start with a leading dot, e.g. ".xyz".
+# Keep entries lowercase. See docs/contributing-rules.md.
+suspicious_tlds:
+  - .xyz
+  - .top
+  - .click
+  - .zip
+  - .work
+  - .support
+  - .loan
+  - .gq
+  - .tk
+  - .ml
+  - .cf

@@ -1,0 +1,81 @@
+# Official domains per brand. Edit freely.
+# Only add domains you verified on the brand's own official website.
+# Keep brand keys lowercase. Keep every domain lowercase, with no
+# scheme (no https://) and no path (no /login). See docs/contributing-rules.md.
+brands:
+  paytm:
+    official_domains:
+      - paytm.com
+      - paytm.in
+      - paytm.co.in
+  phonepe:
+    official_domains:
+      - phonepe.com
+  google:
+    official_domains:
+      - google.com
+      - google.co.in
+      - google.co.uk
+      - googlemail.com
+  gpay:
+    official_domains:
+      - google.com
+      - pay.google.com
+  amazon:
+    official_domains:
+      - amazon.com
+      - amazon.in
+      - amazon.co.uk
+  flipkart:
+    official_domains:
+      - flipkart.com
+  sbi:
+    official_domains:
+      - sbi.co.in
+      - onlinesbi.com
+      - statebankofindia.com
+  hdfc:
+    official_domains:
+      - hdfc.com
+      - hdfcbank.com
+  icici:
+    official_domains:
+      - icici.com
+      - icicibank.com
+  axis:
+    official_domains:
+      - axisbank.com
+      - axis.com
+  npci:
+    official_domains:
+      - npci.org.in
+  bhim:
+    official_domains:
+      - bhimupi.org.in
+      - npci.org.in
+  upi:
+    official_domains:
+      - npci.org.in
+      - bhimupi.org.in
+  whatsapp:
+    official_domains:
+      - whatsapp.com
+  facebook:
+    official_domains:
+      - facebook.com
+      - fb.com
+  instagram:
+    official_domains:
+      - instagram.com
+  microsoft:
+    official_domains:
+      - microsoft.com
+      - live.com
+      - outlook.com
+  apple:
+    official_domains:
+      - apple.com
+      - icloud.com
+  netflix:
+    official_domains:
+      - netflix.com

@@ -1,0 +1,14 @@
+# Scam keywords looked for inside the URL. Edit freely.
+# Keep entries lowercase, one word or short phrase each.
+# Do not repeat a keyword twice. See docs/contributing-rules.md.
+scam_keywords:
+  - kyc
+  - refund
+  - verify
+  - reward
+  - lottery
+  - prize
+  - claim
+  - urgent
+  - blocked
+  - suspended

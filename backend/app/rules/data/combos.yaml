@@ -1,0 +1,78 @@
+# Combination bonuses: extra risk when two warning signs appear together.
+# Each entry fires once when its groups match the (deduped, pre-bonus)
+# finding codes. The bonus becomes its own Finding with a COMBO_ rule_code.
+# Edit bonuses and groups freely; scoring.py applies this table.
+# url_finding_codes must list every rule_code produced by url_analyzer.py.
+url_finding_codes:
+  - NO_HTTPS
+  - IP_ADDRESS_HOST
+  - SUSPICIOUS_TLD
+  - AT_SYMBOL_IN_URL
+  - TOO_MANY_SUBDOMAINS
+  - LONG_URL
+  - PUNYCODE_DOMAIN
+  - BRAND_IN_SUBDOMAIN
+  - LOOKALIKE_DOMAIN
+  - SCAM_KEYWORDS_IN_URL
+  - DOMAIN_VERY_NEW
+  - DOMAIN_NEW
+  - REDIRECT_CHAIN_LONG
+  - REDIRECT_CROSS_DOMAIN
+combos:
+  - rule_code: COMBO_BRAND_AND_SUSPICIOUS_TLD
+    bonus: 15
+    group_a:
+      - BRAND_IN_SUBDOMAIN
+      - LOOKALIKE_DOMAIN
+    group_b:
+      - SUSPICIOUS_TLD
+    any_other: false
+    any_url: false
+    explanation: This link both copies a known brand and uses a risky ending, which together look much more dangerous.
+  - rule_code: COMBO_BRAND_AND_SCAM_KEYWORDS
+    bonus: 10
+    group_a:
+      - BRAND_IN_SUBDOMAIN
+      - LOOKALIKE_DOMAIN
+    group_b:
+      - SCAM_KEYWORDS_IN_URL
+    any_other: false
+    any_url: false
+    explanation: This link copies a known brand and also uses words like KYC or refund, which scammers often combine.
+  - rule_code: COMBO_THREAT_AND_URGENCY
+    bonus: 10
+    group_a:
+      - ACCOUNT_THREAT
+    group_b:
+      - URGENCY_LANGUAGE
+    any_other: false
+    any_url: false
+    explanation: This message both threatens your account and rushes you, which is a classic pressure trick.
+  - rule_code: COMBO_SECRET_WITH_OTHER_SIGNS
+    bonus: 10
+    group_a:
+      - ASKS_FOR_SECRET
+    group_b: []
+    any_other: true
+    any_url: false
+    explanation: This message asks for your OTP or password along with other warning signs, which makes it more dangerous.
+  - rule_code: COMBO_REWARD_WITH_LINK
+    bonus: 10
+    group_a:
+      - REWARD_BAIT
+    group_b:
+      - SHORT_LINK
+    any_other: false
+    any_url: true
+    explanation: This message promises a prize and includes a link, which is how fake reward scams usually work.
+  - rule_code: COMBO_UPI_BRAND_WITH_BAD_HANDLE
+    bonus: 15
+    group_a:
+      - SUPPORT_WORD_IN_UPI
+      - BRAND_IN_UPI_NAME
+    group_b:
+      - LOOKALIKE_UPI_HANDLE
+      - UNKNOWN_UPI_HANDLE
+    any_other: false
+    any_url: false
+    explanation: This UPI ID uses a brand or support word together with a strange handle, which looks like impersonation.

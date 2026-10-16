@@ -1,0 +1,15 @@
+# Support / refund / KYC words looked for inside the UPI local part. Edit freely.
+# Keep entries lowercase. See docs/contributing-rules.md.
+support_words:
+  - support
+  - helpdesk
+  - customercare
+  - care
+  - refund
+  - kyc
+  - cashback
+  - reward
+  - claim
+  - verify
+  - service
+  - official
