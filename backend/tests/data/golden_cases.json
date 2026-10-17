@@ -1,0 +1,299 @@
+[
+  {
+    "id": "safe-url-01",
+    "type": "url",
+    "input": "https://www.google.com/search",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-url-02",
+    "type": "url",
+    "input": "https://www.amazon.in/gp/cart/view.html",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-url-03",
+    "type": "url",
+    "input": "https://onlinesbi.com/personal-banking",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-url-04",
+    "type": "url",
+    "input": "https://www.hdfcbank.com/personal/save",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-url-05",
+    "type": "url",
+    "input": "https://example.com/help/contact",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-url-06",
+    "type": "url",
+    "input": "https://www.flipkart.com/account/orders",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-msg-01",
+    "type": "message",
+    "input": "Hi, are we still meeting for dinner at 8 tonight?",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-msg-02",
+    "type": "message",
+    "input": "Your train ticket PNR 482910 is confirmed. Journey on Friday.",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-msg-03",
+    "type": "message",
+    "input": "Never share your OTP with anyone. Our bank staff will never ask for it.",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-msg-04",
+    "type": "message",
+    "input": "Mom, I reached school safely. Will call you in the evening.",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-msg-05",
+    "type": "message",
+    "input": "Meeting moved to 3 pm tomorrow in conference room B.",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-msg-06",
+    "type": "message",
+    "input": "The shop is closed on Sunday. Please collect your order on Monday.",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-upi-01",
+    "type": "upi",
+    "input": "rahul.sharma@okaxis",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-upi-02",
+    "type": "upi",
+    "input": "9876543210@ybl",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-upi-03",
+    "type": "upi",
+    "input": "priya.nair@okhdfcbank",
+    "expected": "safe"
+  },
+  {
+    "id": "safe-upi-04",
+    "type": "upi",
+    "input": "amit.kumar@upi",
+    "expected": "safe"
+  },
+  {
+    "id": "susp-url-01",
+    "type": "url",
+    "input": "https://paytm-secure.xyz/login",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-url-02",
+    "type": "url",
+    "input": "https://paytmn.com/",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-url-03",
+    "type": "url",
+    "input": "http://93.184.216.34/",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-url-04",
+    "type": "url",
+    "input": "http://xn--paytm-abc.com/login",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-url-05",
+    "type": "url",
+    "input": "https://example.com@evil.com/verify",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-msg-01",
+    "type": "message",
+    "input": "Your account will be blocked today. Act immediately.",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-msg-02",
+    "type": "message",
+    "input": "You won a prize! Claim it here: bit.ly/abc123",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-msg-03",
+    "type": "message",
+    "input": "Please install AnyDesk from the link so our agent can fix your phone, hurry!",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-msg-04",
+    "type": "message",
+    "input": "Dear customer, your KYC is pending. Update within 24 hours: https://example.com/kyc-update",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-msg-05",
+    "type": "message",
+    "input": "This is the income tax department. Respond urgently to this notice.",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-upi-01",
+    "type": "upi",
+    "input": "helpdesk@unknownpay",
+    "expected": "suspicious"
+  },
+  {
+    "id": "susp-upi-02",
+    "type": "upi",
+    "input": "paytm8372@ybl",
+    "expected": "suspicious"
+  },
+  {
+    "id": "dang-url-01",
+    "type": "url",
+    "input": "https://paytm.secure-login-verify.xyz/kyc",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-url-02",
+    "type": "url",
+    "input": "https://amazon.amazom.com/claim-prize",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-url-03",
+    "type": "url",
+    "input": "https://xn--paytm-login.xyz/kyc",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-01",
+    "type": "message",
+    "input": "Your SBI account will be blocked today. Update KYC immediately: http://sbi-kyc-update.xyz",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-02",
+    "type": "message",
+    "input": "You are under digital arrest by CBI. Share your Aadhaar OTP immediately or police will come.",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-03",
+    "type": "message",
+    "input": "Your refund of Rs 4999 is ready. Send your UPI PIN today only. Claim at http://refund-claim.xyz now",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-04",
+    "type": "message",
+    "input": "Download this APK and share the OTP to verify, hurry!",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-05",
+    "type": "message",
+    "input": "I sent money by mistake to your account. Please approve the collect request and share the OTP.",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-06",
+    "type": "message",
+    "input": "Mumbai police here. Your account is blocked. Pay the fine immediately or face arrest.",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-07",
+    "type": "message",
+    "input": "Congratulations! You won a lottery of Rs 50 lakh. To receive it, share your OTP now: https://lottery-claim.xyz/winner",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-08",
+    "type": "message",
+    "input": "Your bank account has been blocked due to KYC. Send your password today only to unblock: http://kyc-unblock-support.top/login",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-09",
+    "type": "message",
+    "input": "Customs alert: your parcel is held. Pay Rs 2000 duty now and share the OTP for delivery.",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-10",
+    "type": "message",
+    "input": "You won a cashback reward of Rs 10000! Grab it today only: http://cashback-reward.top/claim",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-msg-11",
+    "type": "message",
+    "input": "CBI officer here. You are under digital arrest. Give your Aadhaar and OTP within 24 hours.",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-upi-01",
+    "type": "upi",
+    "input": "sbi.refund.support@paydesk",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-upi-02",
+    "type": "upi",
+    "input": "sbi.kyc.update@oksb1",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-upi-03",
+    "type": "upi",
+    "input": "customercare.refund@airtel1",
+    "expected": "dangerous"
+  },
+  {
+    "id": "dang-upi-04",
+    "type": "upi",
+    "input": "amazon.pay.offer@fbl1",
+    "expected": "dangerous"
+  },
+  {
+    "id": "age-very-new-01",
+    "type": "url",
+    "input": "https://example.xyz/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected": "suspicious",
+    "age_days": 10
+  },
+  {
+    "id": "age-new-01",
+    "type": "url",
+    "input": "https://example.xyz/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected": "suspicious",
+    "age_days": 60
+  },
+  {
+    "id": "age-old-01",
+    "type": "url",
+    "input": "https://example.xyz/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "expected": "safe",
+    "age_days": 2000
+  }
+]
