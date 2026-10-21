@@ -7,7 +7,7 @@ only in the root `.env` file, which is never committed.
 ## 1. First-time setup
 
 ```powershell
-cd C:\Users\parth\scamshield
+path\to\scamshield
 Copy-Item .env.example .env
 ```
 
