@@ -233,9 +233,7 @@ jobs:
       - name: npm audit --omit=dev (frontend)
         id: npm_audit
         continue-on-error: true
-        defaults:
-          run:
-            working-directory: frontend
+        working-directory: frontend
         run: |
           set -o pipefail
           npm audit --omit=dev | tee "${RUNNER_TEMP}/npm-audit.log"
