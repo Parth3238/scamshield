@@ -1,0 +1,46 @@
+# Dependabot: weekly dependency-update pull requests.
+#
+# One entry per ecosystem + folder that contains a lockfile/Dockerfile.
+# 5 open PRs max each keeps the PR queue reviewable instead of a flood.
+# GitHub updates a security advisory outside of the open-PR limit, so
+# security fixes always still arrive.
+
+version: 2
+updates:
+  # Python backend dependencies (backend/requirements.txt + requirements-dev.txt).
+  - package-ecosystem: pip
+    directory: /backend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # Node frontend dependencies (frontend/package-lock.json).
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # Backend container image. Checks every FROM line in backend/Dockerfile
+  # (python:3.12-slim base image + the docker/dockerfile syntax tag).
+  - package-ecosystem: docker
+    directory: /backend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # Frontend container image. Checks every FROM line in frontend/Dockerfile
+  # (node:22-alpine base image + the docker/dockerfile syntax tag).
+  - package-ecosystem: docker
+    directory: /frontend
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+
+  # The CI workflow itself: keeps the pinned action versions up to date
+  # (.github/workflows/ci.yml lives under "/").
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5

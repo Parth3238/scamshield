@@ -1,5 +1,7 @@
 # ScamShield
 
+[![CI](https://github.com/Parth3238/scamshield/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Parth3238/scamshield/actions/workflows/ci.yml)
+
 **Paste a suspicious link, message, UPI ID or QR image. Get the warning signs back in plain words.**
 
 ScamShield is for ordinary people — not security experts — who get a scary "account blocked" text, a too-good prize offer, or a QR code from a stranger and want a second opinion before paying or sharing an OTP. It checks the input against a set of fixed, explainable rules and returns a risk score (0–100), a verdict (safe / suspicious / dangerous), and a list of findings in simple language.

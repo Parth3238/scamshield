@@ -1,0 +1,279 @@
+# ScamShield CI.
+#
+# Runs the backend test suite (twice: SQLite and PostgreSQL), the frontend
+# suite, dependency-vulnerability scans, and Docker image builds on every
+# push to main and every pull request.
+#
+# No deployment, no registry push, no real secrets anywhere: every value
+# here that looks like a secret is an obvious fake used only for tests.
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # pull_request_target is intentionally NOT used. It would run this file
+  # with the base branch's permissions and could expose a write-token to
+  # code from an untrusted fork. Plain pull_request is safe and enough.
+
+# Least privilege for every job in this workflow: CI only needs to read
+# the repository. Granting nothing else means a compromised step could not
+# write to the repo, create releases, or touch secrets.
+permissions:
+  contents: read
+
+concurrency:
+  # One group per workflow+branch (or per pull request). A new run of the
+  # same branch cancels older queued/running runs: saves runner minutes
+  # and keeps the checks list clean.
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # ---------------------------------------------------------------- backend
+  backend:
+    name: Backend tests (SQLite) + rules + migrations
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      # Clearly fake, CI-only placeholder (exactly 40 characters). The app
+      # refuses to start without SECRET_KEY, but the real key must never be
+      # committed anywhere. Tests also set their own dummy via conftest.py.
+      SECRET_KEY: "CI-FAKE-TEST-SECRET-KEY-0000000000000000"
+    steps:
+      # Pinned full tag: actions/checkout v7.0.1
+      - uses: actions/checkout@v7.0.1
+
+      # Pinned full tag: actions/setup-python v7.1.0
+      # Built-in pip cache is keyed on the requirement files, so installs
+      # only re-download what changed.
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run backend test suite
+        run: pytest -q
+
+      - name: Validate rule data files (same checks as test_rules_data.py)
+        run: python scripts/validate_rules.py
+
+      - name: Check Alembic migrations against a throwaway SQLite file
+        env:
+          # Absolute path on Linux: sqlite:////tmp/... (4 slashes).
+          DATABASE_URL: sqlite:////tmp/ci_migration_check.db
+        run: |
+          alembic upgrade head
+          alembic current
+          rm -f /tmp/ci_migration_check.db
+
+  # -------------------------------------------------------- backend-postgres
+  backend-postgres:
+    name: Backend tests (PostgreSQL 16)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    env:
+      SECRET_KEY: "CI-FAKE-TEST-SECRET-KEY-0000000000000000"
+      # The throwaway credentials are created by the service container
+      # below and only exist for this run. tests/db_helper.py rebuilds a
+      # clean schema per fixture, because nothing else lives in the DB.
+      TEST_DATABASE_URL: postgresql+psycopg://testuser:ci-throwaway-password@localhost:5432/testdb
+    services:
+      postgres:
+        # postgres:16-alpine, same as docker-compose.yml (still PostgreSQL 16).
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: ci-throwaway-password
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U testuser -d testdb"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      # NO redis service on purpose: the Redis rate-limiter tests use
+      # fakeredis (backend/tests/test_rate_limit_redis.py), so a real
+      # Redis container would only waste runner time.
+    steps:
+      # Pinned full tag: actions/checkout v7.0.1
+      - uses: actions/checkout@v7.0.1
+
+      # Pinned full tag: actions/setup-python v7.1.0
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt -r requirements-dev.txt
+
+      - name: Run backend test suite against PostgreSQL
+        run: pytest -q
+
+  # ---------------------------------------------------------------- frontend
+  frontend:
+    name: Frontend lint + tests + build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: frontend
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+      # Fake value, same default the app uses locally. next.config.ts bakes
+      # BACKEND_URL into the /api rewrite at build time; localhost works.
+      BACKEND_URL: "http://127.0.0.1:8000"
+    steps:
+      # Pinned full tag: actions/checkout v7.0.1
+      - uses: actions/checkout@v7.0.1
+
+      # Pinned full tag: actions/setup-node v7.1.0
+      # Built-in npm cache keyed on frontend/package-lock.json.
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests
+        run: npm test
+
+      - name: Production build (standalone output)
+        run: npm run build
+
+  # ---------------------------------------------------------------- security
+  security:
+    name: Vulnerability scan (pip-audit + npm audit)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Pinned full tag: actions/checkout v7.0.1
+      - uses: actions/checkout@v7.0.1
+
+      # Pinned full tag: actions/setup-python v7.1.0
+      # pip-audit comes pinned from backend/requirements-dev.txt, so its
+      # own version is reviewed like any other dependency.
+      - uses: actions/setup-python@v7.1.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements*.txt
+
+      - name: Install backend requirements (for pip-audit)
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r backend/requirements.txt -r backend/requirements-dev.txt
+
+      # Full report is always printed above nothing is hidden. The
+      # continue-on-error only hands the decision to the step below,
+      # which can keep the job going ONLY for a documented, known-unfixable
+      # advisory. see the "enforce" step for the allowlist.
+      - name: pip-audit (backend/requirements.txt)
+        id: pip_audit
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          pip-audit --progress off -r backend/requirements.txt | tee "${RUNNER_TEMP}/pip-audit.log"
+
+      - name: >-
+          Enforce pip-audit result (fail, or continue only for a
+          known-unfixable advisory)
+        if: steps.pip_audit.outcome == 'failure'
+        run: |
+          echo "pip-audit found vulnerable packages. The full report is printed above; nothing is hidden."
+          # Allowlist of known-unfixable advisories, as a regex of advisory
+          # IDs matching the pip-audit log (e.g. "PYSEC-0000-0001|GHSA-...").
+          #
+          # Empty today, so ANY failure fails CI. If a real known-unfixable
+          # issue appears (upstream has no fixed release), add its exact ID
+          # here ONLY with a comment linking the upstream issue, like:
+          #   KNOWN_UNFIXABLE_REGEXP="PYSEC-0000-0000"  # no fix yet, see <link>
+          # Then a failure matching that ID exits 0 and the job continues.
+          KNOWN_UNFIXABLE_REGEXP=""
+          if [ -z "$KNOWN_UNFIXABLE_REGEXP" ]; then
+            echo "No known-unfixable advisory is allowlisted, so this failure fails CI."
+            exit 1
+          fi
+          if grep -Eq "$KNOWN_UNFIXABLE_REGEXP" "${RUNNER_TEMP}/pip-audit.log"; then
+            echo "::warning::pip-audit failure matches a known-unfixable advisory; reporting it clearly and letting the job continue (see allowlist comment in .github/workflows/ci.yml)."
+            exit 0
+          fi
+          echo "This failure is NOT on the known-unfixable allowlist, so it fails CI."
+          exit 1
+
+      # Pinned full tag: actions/setup-node v7.1.0
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: 20
+
+      - name: npm audit --omit=dev (frontend)
+        id: npm_audit
+        continue-on-error: true
+        defaults:
+          run:
+            working-directory: frontend
+        run: |
+          set -o pipefail
+          npm audit --omit=dev | tee "${RUNNER_TEMP}/npm-audit.log"
+
+      - name: >-
+          Enforce npm audit result (fail, or continue only for a
+          known-unfixable advisory)
+        if: steps.npm_audit.outcome == 'failure'
+        run: |
+          echo "npm audit found vulnerable (runtime) packages. The full report is printed above; nothing is hidden."
+          # Same rule as pip-audit: empty allowlist today, so any failure
+          # fails CI. Only a documented, unfixable advisory ID belongs here:
+          #   NPM_AUDIT_KNOWN_UNFIXABLE_REGEXP="GHSA-0000-0000-0000"
+          NPM_AUDIT_KNOWN_UNFIXABLE_REGEXP=""
+          if [ -z "$NPM_AUDIT_KNOWN_UNFIXABLE_REGEXP" ]; then
+            echo "No known-unfixable advisory is allowlisted, so this failure fails CI."
+            exit 1
+          fi
+          if grep -Eq "$NPM_AUDIT_KNOWN_UNFIXABLE_REGEXP" "${RUNNER_TEMP}/npm-audit.log"; then
+            echo "::warning::npm audit failure matches a known-unfixable advisory; reporting it clearly and letting the job continue (see allowlist comment in .github/workflows/ci.yml)."
+            exit 0
+          fi
+          echo "This failure is NOT on the known-unfixable allowlist, so it fails CI."
+          exit 1
+
+  # ------------------------------------------------------------------ docker
+  docker:
+    name: Build Docker images (no push)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      # Pinned full tag: actions/checkout v7.0.1
+      - uses: actions/checkout@v7.0.1
+
+      - name: Build backend image
+        run: docker build -t scamshield-backend:ci ./backend
+
+      - name: Build frontend image
+        # BACKEND_URL is a build-time arg for next.config.ts; a fake
+        # localhost value is enough for CI (set at build time only).
+        run: docker build --build-arg BACKEND_URL=http://127.0.0.1:8000 -t scamshield-frontend:ci ./frontend
