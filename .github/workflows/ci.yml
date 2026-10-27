@@ -149,7 +149,7 @@ jobs:
       # Built-in npm cache keyed on frontend/package-lock.json.
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: frontend/package-lock.json
 
@@ -228,7 +228,7 @@ jobs:
       # Pinned full tag: actions/setup-node v7.1.0
       - uses: actions/setup-node@v7.1.0
         with:
-          node-version: 20
+          node-version: 24
 
       - name: npm audit --omit=dev (frontend)
         id: npm_audit
