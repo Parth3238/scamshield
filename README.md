@@ -43,6 +43,12 @@ certification of anything.
 
 ## How it works
 
+## Screenshots
+
+![Checker](docs/images/checker.png)
+![Scam link result](docs/images/result-link.png)
+![Scam message result](docs/images/result-message.png)
+
 1. The browser talks only to Next.js. `/api/*` requests are proxied to `http://127.0.0.1:8000`, so the httpOnly login cookie works without CORS.
 2. `POST /api/scan` identifies the caller (login cookie, `X-API-Key`, or anonymous IP) and enforces that identity's rate limit.
 3. String analyzers run first (URL / message / UPI rules — pure functions, no network).
