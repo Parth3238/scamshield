@@ -2,7 +2,7 @@
 # ScamShield backend image. Runtime only, non-root, no secrets baked in.
 
 # ---------- Builder: compile/download wheels only ----------
-FROM python:3.12-slim AS builder
+FROM python:3.15-slim AS builder
 WORKDIR /app
 
 # build-essential lives ONLY here so the final image stays small
@@ -17,7 +17,7 @@ RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
 
 # ---------- Runtime: minimal image that actually runs ----------
-FROM python:3.12-slim
+FROM python:3.15-slim
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     ENVIRONMENT=production \
